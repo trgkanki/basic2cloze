@@ -1,4 +1,8 @@
+# Automatic Basic To Cloze
 
-# anki_plugins [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4YEDX8978UQUG)
+[![Donate via patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/trgk)
+[![AnkiWeb page](https://img.shields.io/badge/AnkiWeb-addon-blue.svg)](https://ankiweb.net/shared/info/2105427255)
 
-Obsolete monorepo. See each addon's repo [here](https://github.com/trgkanki)
+Automatically convert cloze-y things to cloze type.
+
+![Example image](bas2cloz.gif)
