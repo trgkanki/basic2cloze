@@ -11,12 +11,8 @@
 # License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
 #
 
-from aqt import mw
 from aqt.addcards import AddCards
 from anki.hooks import wrap
-from anki.hooks import addHook, runHook
-from aqt.utils import tooltip
-from anki.lang import _
 
 from .modelFinder import modelExists
 from .modelSelector import targetModelSelector
@@ -26,28 +22,30 @@ import re
 
 def newAddCards(self, _old):
     note = self.editor.note
-    targetModelName = targetModelSelector(note)
-    if not modelExists(targetModelName):
-        targetModelName = None
+    oldModelName = None
+    targetModelName = None
 
-    if targetModelName:
-        tooltip(targetModelName)
-        oldModelName = None
+    def cb1():
+        nonlocal oldModelName, targetModelName
 
-        def cb1():
-            nonlocal oldModelName
-            oldModelName = note.model()['name']
-            changeModelTo(self.modelChooser, targetModelName)
-            self.editor.saveNow(cb2)
+        targetModelName = targetModelSelector(note)
+        if not modelExists(targetModelName):
+            targetModelName = None
 
-        def cb2():
-            nonlocal oldModelName
-            self._addCards()
-            changeModelTo(self.modelChooser, oldModelName)
+        if targetModelName is None:
+            return _old(self)
 
-        self.editor.saveNow(cb1)
-    else:
-        return _old(self)
+        oldModelName = note.model()['name']
+        changeModelTo(self.modelChooser, targetModelName)
+        self.editor.saveNow(cb2)
+
+    def cb2():
+        nonlocal oldModelName
+        self._addCards()
+        changeModelTo(self.modelChooser, oldModelName)
+
+    self.editor.saveNow(cb1)
+
 
 
 AddCards.addCards = wrap(AddCards.addCards, newAddCards, "around")
