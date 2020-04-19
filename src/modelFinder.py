@@ -5,7 +5,7 @@ from anki.lang import _
 from typing import List, Union
 
 
-def _modelExists(model_name):
+def modelExists(model_name):
     return bool(mw.col.models.byName(model_name))
 
 
@@ -18,8 +18,8 @@ def _findModelName():
     global _basicNoteTypeList
     global _clozeNoteType
 
-    _basicNoteTypeList = list(filter(_modelExists, ['Basic', _('Basic')]))
-    clozeNoteTypeList = list(filter(_modelExists, ['Cloze', _('Cloze')]))
+    _basicNoteTypeList = list(filter(modelExists, ['Basic', _('Basic')]))
+    clozeNoteTypeList = list(filter(modelExists, ['Cloze', _('Cloze')]))
 
     if not _basicNoteTypeList:
         tooltip('[Automatic basic to cloze] Cannot find source \'Basic\' model')

@@ -18,32 +18,20 @@ from anki.hooks import addHook, runHook
 from aqt.utils import tooltip
 from anki.lang import _
 
-from .modelFinder import (
-    getBasicNoteTypeList,
-    getClozeNoteType
-)
+from .modelFinder import modelExists
+from .modelSelector import targetModelSelector
 from .modelChanger import changeModelTo
 
 import re
-from typing import Union
-
-def targetModelSelector(note) -> Union[str, None]:
-    if note.model()['name'] not in getBasicNoteTypeList():
-        return None
-
-    # Basic cloze type
-    for name, val in note.items():
-        if re.search(r'\{\{c(\d+)::', val):
-            return getClozeNoteType()
-
-    # None for no-change
-    return None
-
 
 def newAddCards(self, _old):
     note = self.editor.note
     targetModelName = targetModelSelector(note)
+    if not modelExists(targetModelName):
+        targetModelName = None
+
     if targetModelName:
+        tooltip(targetModelName)
         oldModelName = None
 
         def cb1():
@@ -56,8 +44,6 @@ def newAddCards(self, _old):
             nonlocal oldModelName
             self._addCards()
             changeModelTo(self.modelChooser, oldModelName)
-            tooltip(_('[Basic2Cloze] %s -> %s' %
-                      (oldModelName, targetModelName)))
 
         self.editor.saveNow(cb1)
     else:
