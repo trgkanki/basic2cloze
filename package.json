@@ -11,7 +11,7 @@
     "anki-addon"
   ],
   "author": "trgk",
-  "license": "ISC",
+  "license": "AGPL3",
   "devDependencies": {
     "bestzip": "^2.1.5",
     "husky": "^4.2.5",
