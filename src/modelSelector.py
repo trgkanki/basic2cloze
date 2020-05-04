@@ -3,13 +3,12 @@ from .modelFinder import (
     getClozeNoteType
 )
 
-from typing import Union
 import re
 
 
 clozeHideAllType = 'Cloze (Hide all)'
 
-def targetModelSelector(note) -> Union[str, None]:
+def targetModelSelector(note):
     if note.model()['name'] not in getBasicNoteTypeList():
         return None
 

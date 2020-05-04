@@ -2,15 +2,14 @@ from aqt import mw
 from anki.hooks import addHook
 from aqt.utils import tooltip
 from anki.lang import _
-from typing import List, Union
 
 
 def modelExists(model_name):
     return bool(mw.col.models.byName(model_name))
 
 
-_basicNoteTypeList: List[str] = []
-_clozeNoteType: Union[str, None] = None
+_basicNoteTypeList = []
+_clozeNoteType = None
 
 
 def _findModelName():
@@ -35,8 +34,8 @@ def _findModelName():
 
 addHook("profileLoaded", _findModelName)
 
-def getBasicNoteTypeList() -> List[str]:
+def getBasicNoteTypeList():
     return _basicNoteTypeList
 
-def getClozeNoteType() -> Union[str, None]:
+def getClozeNoteType():
     return _clozeNoteType
