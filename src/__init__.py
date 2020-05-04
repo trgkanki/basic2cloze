@@ -1,6 +1,6 @@
-# -*- mode: Python ; coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 #
-# Copyright © 2017 Hyun Woo Park (phu54321@naver.com)
+# basic2cloze v20.5.4i8
 #
 # Lots of code from "Quick note and deck buttons" written by Roland Sieker
 #
@@ -8,8 +8,9 @@
 #   The idea, original version and large parts of this code
 #   written by Steve AW <steveawa@gmail.com>
 #
-# License: GNU GPL, version 3 or later; http://www.gnu.org/copyleft/gpl.html
-#
+# Copyright: trgk (phu54321@naver.com)
+# License: GNU AGPL, version 3 or later;
+# See http://www.gnu.org/licenses/agpl.html
 
 from aqt.addcards import AddCards
 from anki.hooks import wrap
