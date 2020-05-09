@@ -32,7 +32,7 @@
   },
   "lint-staged": {
     "*.{py}": [
-      "autopep8 -i"
+      "black"
     ]
   },
   "dependencies": {}

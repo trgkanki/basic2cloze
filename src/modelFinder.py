@@ -17,15 +17,15 @@ def _findModelName():
     global _basicNoteTypeList
     global _clozeNoteType
 
-    _basicNoteTypeList = list(filter(modelExists, ['Basic', _('Basic')]))
-    clozeNoteTypeList = list(filter(modelExists, ['Cloze', _('Cloze')]))
+    _basicNoteTypeList = list(filter(modelExists, ["Basic", _("Basic")]))
+    clozeNoteTypeList = list(filter(modelExists, ["Cloze", _("Cloze")]))
 
     if not _basicNoteTypeList:
-        tooltip('[Automatic basic to cloze] Cannot find source \'Basic\' model')
+        tooltip("[Automatic basic to cloze] Cannot find source 'Basic' model")
         _basicNoteTypeList = []
 
     if not clozeNoteTypeList:
-        tooltip('[Automatic basic to cloze] Cannot find target \'Cloze\' model')
+        tooltip("[Automatic basic to cloze] Cannot find target 'Cloze' model")
         _clozeNoteType = None
 
     else:
@@ -34,8 +34,10 @@ def _findModelName():
 
 addHook("profileLoaded", _findModelName)
 
+
 def getBasicNoteTypeList():
     return _basicNoteTypeList
+
 
 def getClozeNoteType():
     return _clozeNoteType
