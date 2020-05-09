@@ -40,7 +40,7 @@ import re
 def _onClozeNew(self, *, _old):
     basicNoteTypes = getBasicNoteTypeList()
     currentModelName = self.note.model()["name"]
-    shouldHookReSearch = (currentModelName in basicNoteTypes) and (not self.addMode)
+    shouldHookReSearch = (currentModelName in basicNoteTypes) and self.addMode
 
     if shouldHookReSearch:
         hookReSearch()
