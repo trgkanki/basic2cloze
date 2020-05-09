@@ -1,6 +1,6 @@
 {
   "name": "basic2cloze",
-  "version": "20.5.4i17",
+  "version": "20.5.9i96",
   "description": "Automatic basic to cloze",
   "scripts": {
     "dist": "node dist.js"
