@@ -12,44 +12,45 @@
 # License: GNU AGPL, version 3 or later;
 # See http://www.gnu.org/licenses/agpl.html
 
+from aqt import gui_hooks, mw
 from aqt.addcards import AddCards
-from aqt.editor import Editor
-from anki.hooks import wrap
+from aqt.utils import tooltip, tr
 
-from .modelFinder import modelExists
-from .modelSelector import targetModelSelector
-from .modelChanger import changeModelTo
-from .hideTooltip import _onClozeNew
+# the dialog for adding cards
+addcards = None
 
-import re
+# indicates if the most recent card that was added was converted from basic to cloze
+# used for setting the notetype back to Basic after editor was closed and reopened
+# because by default it seems to be set to the note type of the most recent added card
+just_did_this = False 
 
+def convert_basic_to_cloze(problem, note):
+    global just_did_this
 
-def newAddCards(self, _old):
-    note = self.editor.note
-    oldModelName = None
-    targetModelName = None
+    if not (note._note_type['name']  == 'Basic' and problem == tr.adding_cloze_outside_cloze_notetype()):
+        just_did_this = False
+        return problem
 
-    def cb1():
-        nonlocal oldModelName, targetModelName
+    if note['Back'] != "":
+        just_did_this = False
+        return "Automatic Basic to Cloze: \"Back\" must be empty"
 
-        targetModelName = targetModelSelector(note)
-        if not modelExists(targetModelName):
-            targetModelName = None
+    just_did_this = True
 
-        if targetModelName is None:
-            return _old(self)
+    text = note['Front']
+    note.__init__(mw.col, mw.col.models.by_name('Cloze'))
+    note['Text'] = text
 
-        oldModelName = note.model()["name"]
-        changeModelTo(self.modelChooser, targetModelName)
-        self.editor.saveNow(cb2)
-
-    def cb2():
-        nonlocal oldModelName
-        self._addCards()
-        changeModelTo(self.modelChooser, oldModelName)
-
-    self.editor.saveNow(cb1)
+    return None
+gui_hooks.add_cards_will_add_note.append(convert_basic_to_cloze)
 
 
-AddCards.addCards = wrap(AddCards.addCards, newAddCards, "around")
-Editor._onCloze = wrap(Editor._onCloze, _onClozeNew, "around")
+def on_addcards_init(addcards: AddCards):
+    global addcards_
+    addcards_ = addcards
+
+    if just_did_this:
+        addcards.notetype_chooser.selected_notetype_id = mw.col.models.id_for_name('Basic')
+        addcards.notetype_chooser.show()
+gui_hooks.add_cards_did_init.append(on_addcards_init)
+
