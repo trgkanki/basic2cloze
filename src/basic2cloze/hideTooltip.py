@@ -33,12 +33,12 @@ So for alternative measure we hook the following if statement by hooking
 
 from aqt.editor import Editor
 from anki.hooks import wrap
-from .modelFinder import getBasicNoteTypeList
+from .modelFinder import get_basic_note_types
 import re
 
 
 def _onClozeNew(self, *, _old):
-    basicNoteTypes = getBasicNoteTypeList()
+    basicNoteTypes = get_basic_note_types()
     currentModelName = self.note.model()["name"]
     shouldHookReSearch = (currentModelName in basicNoteTypes) and self.addMode
 

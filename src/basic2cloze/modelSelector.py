@@ -1,4 +1,4 @@
-from .modelFinder import getBasicNoteTypeList, getClozeNoteType
+from .modelFinder import get_basic_note_types, get_cloze_note_types
 
 import re
 
@@ -6,19 +6,19 @@ import re
 clozeHideAllType = "Cloze (Hide all)"
 
 
-def targetModelSelector(note):
-    if note.model()["name"] not in getBasicNoteTypeList():
+def target_model(note):
+    if note.model() not in get_basic_note_types():
         return None
 
     # Cloze (Hide All) type
-    for name, val in note.items():
+    for _, val in note.items():
         if re.search(r"\{\{c(\d+)::!", val):
             return clozeHideAllType
 
     # Basic cloze type
-    for name, val in note.items():
+    for _, val in note.items():
         if re.search(r"\{\{c(\d+)::", val):
-            return getClozeNoteType()
+            return get_cloze_note_types()[0] if get_cloze_note_types() else None
 
     # None for no-change
     return None
