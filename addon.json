@@ -1,0 +1,11 @@
+{
+    "display_name": "avgEase",
+    "module_name": "avgEase",
+    "repo_name": "Anki-avgEase",
+    "ankiweb_id": "1129477042",
+    "author": "RisingOrange",
+    "conflicts": [],
+    "targets": [
+        "anki21"
+    ]
+}
