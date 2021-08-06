@@ -1,43 +1,37 @@
-from aqt import mw
 from anki.hooks import addHook
-from aqt.utils import tooltip
-from anki.lang import _
-
-
-def modelExists(model_name):
-    return bool(mw.col.models.byName(model_name))
-
+from aqt import mw
+from aqt.utils import tooltip, tr
 
 _basicNoteTypeList = []
 _clozeNoteType = None
 
 
-def _findModelName():
+def get_models():
     """Prepare note type"""
     global _basicNoteTypeList
     global _clozeNoteType
 
-    _basicNoteTypeList = list(filter(modelExists, ["Basic", _("Basic")]))
-    clozeNoteTypeList = list(filter(modelExists, ["Cloze", _("Cloze")]))
+    _basicNoteTypeList = [mw.col.models.by_name(x) for x in ["Basic", tr.notetypes_basic_name()] if x]
+    clozeNoteTypeList = [mw.col.models.by_name(x) for x in ["Cloze", tr.notetypes_cloze_name()] if x]
 
     if not _basicNoteTypeList:
-        tooltip("[Automatic basic to cloze] Cannot find source 'Basic' model")
+        tooltip("[Automatic Basic to Cloze] Cannot find source 'Basic' model")
         _basicNoteTypeList = []
 
     if not clozeNoteTypeList:
-        tooltip("[Automatic basic to cloze] Cannot find target 'Cloze' model")
+        tooltip("[Automatic Basic to Cloze] Cannot find target 'Cloze' model")
         _clozeNoteType = None
 
     else:
         _clozeNoteType = clozeNoteTypeList[0]
 
 
-addHook("profileLoaded", _findModelName)
+addHook("profileLoaded", get_models)
 
 
-def getBasicNoteTypeList():
+def get_basic_note_type_list():
     return _basicNoteTypeList
 
 
-def getClozeNoteType():
+def get_cloze_note_type():
     return _clozeNoteType

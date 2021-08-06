@@ -16,41 +16,37 @@ from aqt import gui_hooks, mw
 from aqt.addcards import AddCards
 from aqt.utils import tooltip, tr
 
-# the dialog for adding cards
-addcards = None
-
-# indicates if the most recent card that was added was converted from basic to cloze
-# used for setting the notetype back to Basic after editor was closed and reopened
-# because by default it seems to be set to the note type of the most recent added card
-just_did_this = False 
+from .modelFinder import get_basic_note_type_list, get_cloze_note_type
 
 def convert_basic_to_cloze(problem, note):
-    global just_did_this
+    if not (
+        note._note_type['name'] in get_basic_note_type_list() and 
+        problem == tr.adding_cloze_outside_cloze_notetype()
+    ):
+        return problem
 
-    if not (note._note_type['name']  == 'Basic' and problem == tr.adding_cloze_outside_cloze_notetype()):
-        just_did_this = False
+    if not get_cloze_note_type():
+        tooltip("[Automatic Basic to Cloze] Cannot find target 'Cloze' model")
         return problem
 
     if note['Back'] != "":
-        just_did_this = False
-        return "Automatic Basic to Cloze: \"Back\" must be empty"
-
-    just_did_this = True
+        return "[Automatic Basic to Cloze] 'Back' must be empty"
 
     text = note['Front']
-    note.__init__(mw.col, mw.col.models.by_name('Cloze'))
+    note.__init__(mw.col, get_cloze_note_type())
     note['Text'] = text
 
     return None
 gui_hooks.add_cards_will_add_note.append(convert_basic_to_cloze)
 
 
-def on_addcards_init(addcards: AddCards):
-    global addcards_
-    addcards_ = addcards
-
-    if just_did_this:
-        addcards.notetype_chooser.selected_notetype_id = mw.col.models.id_for_name('Basic')
-        addcards.notetype_chooser.show()
-gui_hooks.add_cards_did_init.append(on_addcards_init)
+def change_notetype_from_cloze_to_basic_in_addcards_dialog(addcards: AddCards):
+    try:
+        if addcards.notetype_chooser.selected_notetype_id == get_cloze_note_type()['id']:
+            addcards.notetype_chooser.selected_notetype_id = get_basic_note_type_list()[0]['id']
+            addcards.notetype_chooser.show()
+    except Exception as e:
+        print(e)
+        pass # don't cause an error when note types are missing or this code becomes outdated
+gui_hooks.add_cards_did_init.append(change_notetype_from_cloze_to_basic_in_addcards_dialog)
 
