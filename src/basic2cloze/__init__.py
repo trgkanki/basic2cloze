@@ -6,5 +6,5 @@ if ANKI_VERSION_TUPLE >= (2, 1, 45):
     from .basic2cloze import main
     main()
 else:
-    from .basic2cloze_old import main
+    from .basic2cloze_old.basic2cloze import main
     main()

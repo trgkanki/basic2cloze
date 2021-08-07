@@ -12,15 +12,17 @@
 # License: GNU AGPL, version 3 or later;
 # See http://www.gnu.org/licenses/agpl.html
 
-from anki.hooks import wrap
 from aqt.addcards import AddCards
 from aqt.editor import Editor
+from anki.hooks import wrap
 
-from .hideTooltip import _onClozeNew
+from .modelFinder import modelExists
+from .modelSelector import targetModelSelector
 from .modelChanger import changeModelTo
-from .modelSelector import target_model
+from .hideTooltip import _onClozeNew
 
 def main():
+
     def newAddCards(self, _old):
         note = self.editor.note
         oldModelName = None
@@ -29,11 +31,13 @@ def main():
         def cb1():
             nonlocal oldModelName, targetModelName
 
-            target_model_ = target_model(note)
-            if not target_model_:
+            targetModelName = targetModelSelector(note)
+            if not modelExists(targetModelName):
+                targetModelName = None
+
+            if targetModelName is None:
                 return _old(self)
 
-            targetModelName = target_model_['name']
             oldModelName = note.model()["name"]
             changeModelTo(self.modelChooser, targetModelName)
             self.editor.saveNow(cb2)
