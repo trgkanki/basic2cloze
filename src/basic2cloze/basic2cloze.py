@@ -72,3 +72,10 @@ def main():
 
     gui_hooks.editor_did_init_shortcuts.append(
         add_cloze_shortcut_that_works_on_basic_notes)
+
+    def show_cloze_button(editor):
+        if editor.note.note_type() in get_basic_note_types():
+            editor.web.eval(
+                '$editorToolbar.then(({ templateButtons }) => templateButtons.showButton("cloze")); '
+            )
+    gui_hooks.editor_did_load_note.append(show_cloze_button)
