@@ -7,7 +7,7 @@ clozeHideAllType = "Cloze (Hide all)"
 
 
 def target_model(note):
-    if note.model() not in get_basic_note_types():
+    if note.note_type() not in get_basic_note_types():
         return None
 
     # Cloze (Hide All) type
