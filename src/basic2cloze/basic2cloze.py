@@ -2,6 +2,7 @@ import re
 
 from aqt import gui_hooks, mw
 from aqt.addcards import AddCards
+from aqt.editor import MODEL_CLOZE
 from aqt.utils import KeyboardModifiersPressed, tooltip, tr
 
 from .modelFinder import get_basic_note_types, get_cloze_note_types
@@ -52,8 +53,12 @@ def main():
                 lambda: _myOnCloze(editor), keepFocus=True)
 
         def _myOnCloze(self):
-            if self.note.model() not in get_basic_note_types():
+            if not(
+                self.note.note_type() in get_basic_note_types() or 
+                self.note.note_type()["type"] == MODEL_CLOZE
+            ):
                 return
+
             # find the highest existing cloze
             highest = 0
             for name, val in list(self.note.items()):
@@ -69,7 +74,6 @@ def main():
 
         shortcuts.append(("Ctrl+Shift+C", lambda: myOnCloze(editor)))
         shortcuts.append(("Ctrl+Shift+Alt+C", lambda: myOnCloze(editor)))
-
     gui_hooks.editor_did_init_shortcuts.append(
         add_cloze_shortcut_that_works_on_basic_notes)
 
