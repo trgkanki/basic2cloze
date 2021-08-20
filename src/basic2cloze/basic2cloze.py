@@ -5,14 +5,14 @@ from aqt.addcards import AddCards
 from aqt.editor import MODEL_CLOZE
 from aqt.utils import KeyboardModifiersPressed, tooltip, tr
 
-from .modelFinder import get_basic_note_types, get_cloze_note_types
+from .modelFinder import get_basic_note_type_ids, get_cloze_note_type_ids
 from .modelSelector import target_model
 
 
 def main():
     def convert_basic_to_cloze(problem, note):
         if not (
-            note._note_type in get_basic_note_types() and
+            note._note_type['id'] in get_basic_note_type_ids() and
             problem == tr.adding_cloze_outside_cloze_notetype()
         ):
             return problem
@@ -35,9 +35,9 @@ def main():
 
     def change_notetype_from_cloze_to_basic_in_addcards_dialog(addcards: AddCards):
         try:
-            if addcards.notetype_chooser.selected_notetype_id in [x['id'] for x in get_cloze_note_types()]:
-                addcards.notetype_chooser.selected_notetype_id = get_basic_note_types()[
-                    0]['id']
+            if addcards.notetype_chooser.selected_notetype_id in get_cloze_note_type_ids():
+                addcards.notetype_chooser.selected_notetype_id = get_basic_note_type_ids()[
+                    0]
                 addcards.notetype_chooser.show()
         except Exception as e:
             print(e)
@@ -54,7 +54,7 @@ def main():
 
         def _myOnCloze(self):
             if not(
-                self.note.note_type() in get_basic_note_types() or 
+                self.note.note_type()['id'] in get_basic_note_type_ids() or
                 self.note.note_type()["type"] == MODEL_CLOZE
             ):
                 return
@@ -78,7 +78,7 @@ def main():
         add_cloze_shortcut_that_works_on_basic_notes)
 
     def show_cloze_button(editor):
-        if editor.note.note_type() in get_basic_note_types():
+        if editor.note.note_type()['id'] in get_basic_note_type_ids():
             editor.web.eval(
                 '$editorToolbar.then(({ templateButtons }) => templateButtons.showButton("cloze")); '
             )
