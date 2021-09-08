@@ -3,8 +3,9 @@
 
 build/
 tools/
- profile/
+profile/
 
 meta.json
 
-**/__pycache__
+__pycache__/
+
