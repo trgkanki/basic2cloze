@@ -1,5 +1,6 @@
 import re
 
+from anki.notes import NoteFieldsCheckResult
 from aqt import gui_hooks, mw
 from aqt.addcards import AddCards
 from aqt.editor import MODEL_CLOZE, Editor
@@ -85,3 +86,14 @@ def main():
                 '$editorToolbar.then(({ templateButtons }) => templateButtons.showButton("cloze")); '
             )
     gui_hooks.editor_did_load_note.append(show_cloze_button)
+
+    original_update_duplicate_display = Editor._update_duplicate_display
+
+    def _update_duplicate_display_ignore_cloze_problems_for_basic_notes(self, result) -> None:
+        if self.note.note_type()['id'] in get_basic_note_type_ids():
+            if result == NoteFieldsCheckResult.NOTETYPE_NOT_CLOZE:
+                result = NoteFieldsCheckResult.NORMAL
+            if result == NoteFieldsCheckResult.FIELD_NOT_CLOZE:
+                result = NoteFieldsCheckResult.NORMAL
+        original_update_duplicate_display(self, result)
+    Editor._update_duplicate_display = _update_duplicate_display_ignore_cloze_problems_for_basic_notes
