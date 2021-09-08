@@ -2,7 +2,7 @@ import re
 
 from aqt import gui_hooks, mw
 from aqt.addcards import AddCards
-from aqt.editor import MODEL_CLOZE
+from aqt.editor import MODEL_CLOZE, Editor
 from aqt.utils import KeyboardModifiersPressed, tooltip, tr
 
 from .modelFinder import get_basic_note_type_ids, get_cloze_note_type_ids
@@ -47,18 +47,20 @@ def main():
 
     def add_cloze_shortcut_that_works_on_basic_notes(shortcuts, editor):
 
+        original_onCloze = Editor.onCloze
+
         # code adapted from original onCloze and _onCloze
         def myOnCloze(self):
-            self.call_after_note_saved(
-                lambda: _myOnCloze(editor), keepFocus=True)
-
-        def _myOnCloze(self):
-            if not(
+            if(
                 self.note.note_type()['id'] in get_basic_note_type_ids() or
                 self.note.note_type()["type"] == MODEL_CLOZE
             ):
-                return
+                self.call_after_note_saved(
+                    lambda: _myOnCloze(editor), keepFocus=True)
+            else:
+                original_onCloze(self)
 
+        def _myOnCloze(self):
             # find the highest existing cloze
             highest = 0
             for name, val in list(self.note.items()):
