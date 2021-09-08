@@ -1,0 +1,11 @@
+{
+    "display_name": "basic2cloze",
+    "module_name": "basic2cloze",
+    "repo_name": "basic2cloze",
+    "ankiweb_id": "",
+    "author": "RisingOrange",
+    "conflicts": [],
+    "targets": [
+        "anki21"
+    ]
+}
