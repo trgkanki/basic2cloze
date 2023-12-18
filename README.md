@@ -1,7 +1,11 @@
 # Automatic Basic To Cloze
 
-[![Donate via patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/trgk)
-[![AnkiWeb page](https://img.shields.io/badge/AnkiWeb-addon-blue.svg)](https://ankiweb.net/shared/info/2105427255)
+## Unmaintained
+
+I'm not maintaining the addon anymore. Please migrate to the [updated version](https://ankiweb.net/shared/info/800723229) please.
+Thanks for [RisingOrange](https://github.com/RisingOrange/) for further maintaining the addon.
+
+----
 
 Automatically convert cloze-y things to cloze type.
 
